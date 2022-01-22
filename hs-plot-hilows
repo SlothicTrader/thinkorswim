@@ -118,9 +118,9 @@ plot PDCL = if ShowPrevDayHighLow && CTDay && PlotTimePDHL && Today then PDL els
 plot PDCLS = if ShowPrevDayHighLow && CTDay && PlotTimePDHL && Today then PDC else Double.NaN;
 
 PDCH.SetDefaultColor(Color.DARK_ORANGE);
-PDCH.SetStyle(Curve.SHORT_DASH);
+PDCH.SetPaintingStrategy(PaintingStrategy.POINTS);
 PDCL.SetDefaultColor(Color.DARK_ORANGE);
-PDCL.SetStyle(Curve.SHORT_DASH);
+PDCL.SetPaintingStrategy(PaintingStrategy.POINTS);
 PDCLS.SetDefaultColor(Color.DOWNTICK);
 PDCLS.SetStyle(Curve.FIRM);
 
