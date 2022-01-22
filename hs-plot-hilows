@@ -1,0 +1,129 @@
+script IsTime {
+    input time = 0000;
+    plot IsTime = SecondsFromTime(time)[1] < 0 and SecondsFromTime(time) >= 0;
+}
+
+declare upper;
+
+def Today = if GetLastDay() == GetDay() then yes else no;
+
+input PlotOverNightExtremes = yes;
+input ExtendOverNightHighLowTo = 1600;
+input ShowPrevDayHighLow = yes;
+input ExtendPreviousDayHighLowTo = 1600;
+input ShowPreviousDayLevelsChartBubbles = yes;
+input TimeOfBubble = 1600;
+
+DefineGlobalColor("Time1", GetColor(1));
+
+
+def o = open;
+def h = high;
+def l = low;
+def c = close;
+def v = volume;
+def bar = BarNumber();
+def GlobeX = GetTime() < RegularTradingStart(GetYYYYMMDD());
+def PlotTimePMHL = SecondsFromTime(0100) >= 0 and SecondsTillTime(ExtendOverNightHighLowTo) > 0;
+
+
+def vol = if GlobeX and !GlobeX[1] 
+
+          then v 
+
+          else if GlobeX 
+
+               then vol[1] + v 
+
+               else Double.NaN;
+
+def GlobeX_Volume = vol;
+
+def ONhigh = if GlobeX and !GlobeX[1] 
+
+             then h 
+
+             else if GlobeX and 
+
+                     h > ONhigh[1] 
+
+                     then h 
+
+                  else ONhigh[1];
+
+def ONhighBar = if GlobeX and h == ONhigh 
+
+                then bar 
+
+                else Double.NaN;
+
+def ONlow = if GlobeX and !GlobeX[1] 
+
+            then l 
+
+            else if GlobeX and 
+
+                    l < ONlow[1] 
+
+            then l 
+
+                 else ONlow[1];
+
+def ONlowBar = if GlobeX and l == ONlow 
+               then bar 
+               else Double.NaN;
+
+def OverNightHigh = if BarNumber() == HighestAll(ONhighBar) 
+                    then ONhigh 
+                    else OverNightHigh[1];
+
+def OverNightLow = if BarNumber() == HighestAll(ONlowBar) 
+                   then ONlow 
+                   else OverNightLow[1];
+
+plot ONH = if OverNightHigh > 0 and PlotTimePMHL
+           then OverNightHigh 
+           else Double.NaN;
+
+ONH.SetHiding(!PlotOverNightExtremes);
+ONH.SetPaintingStrategy(PaintingStrategy.DASHES);
+ONH.SetDefaultColor(CreateColor(77, 166, 255));
+ONH.HideBubble();
+ONH.HideTitle();
+
+plot ONL = if OverNightLow > 0 and PlotTimePMHL
+
+           then OverNightLow 
+
+           else Double.NaN;
+
+ONL.SetHiding(!PlotOverNightExtremes);
+ONL.SetPaintingStrategy(PaintingStrategy.DASHES);
+ONL.SetDefaultColor(CreateColor(77, 166, 255));
+ONL.HideBubble();
+ONL.HideTitle(); 
+
+# >>> Previous Day High/Low Plot <<<
+
+def Day = GetDay();
+def LDay = GetLastDay();
+def CTDay = Day == LDay;
+def PDH = if !Day then Double.NaN else high (period = "day")[1];
+def PDL = if !Day then Double.NaN else low (period = "day")[1];
+def PDC = if !Day then Double.NaN else close (period = "day")[1];
+def PlotTimePDHL = SecondsFromTime(0100) >= 0 and SecondsTillTime(ExtendPreviousDayHighLowTo) > 0;
+
+plot PDCH = if ShowPrevDayHighLow && CTDay && PlotTimePDHL && Today then PDH else Double.NaN;
+plot PDCL = if ShowPrevDayHighLow && CTDay && PlotTimePDHL && Today then PDL else Double.NaN;
+plot PDCLS = if ShowPrevDayHighLow && CTDay && PlotTimePDHL && Today then PDC else Double.NaN;
+
+PDCH.SetDefaultColor(Color.DARK_ORANGE);
+PDCH.SetStyle(Curve.SHORT_DASH);
+PDCL.SetDefaultColor(Color.DARK_ORANGE);
+PDCL.SetStyle(Curve.SHORT_DASH);
+PDCLS.SetDefaultColor(Color.DOWNTICK);
+PDCLS.SetStyle(Curve.FIRM);
+
+AddChartBubble(IsTime(TimeOfBubble) && ShowPreviousDayLevelsChartBubbles && Today, "price location" = PDH, text = "Previous Day High",GlobalColor("Time1"),yes);
+AddChartBubble(IsTime(TimeOfBubble) && ShowPreviousDayLevelsChartBubbles && Today, "price location" = PDL, text = "Previous Day Low",GlobalColor("Time1"),no);
+ 
