@@ -10,6 +10,7 @@ def Today = if GetLastDay() == GetDay() then yes else no;
 input PlotOverNightExtremes = yes;
 input ExtendOverNightHighLowTo = 1600;
 input ShowPrevDayHighLow = yes;
+input ShowT2HighLow = yes;
 input ExtendPreviousDayHighLowTo = 1600;
 input ShowPDLevelsChartBubbles = no;
 input ShowT2LevelsChartBubbles = no;
@@ -131,15 +132,15 @@ PDCLS.SetPaintingStrategy(PaintingStrategy.LINE);
 PDCLS.SetStyle(Curve.MEDIUM_DASH);
 PDCLS.SetLineWeight(2);
 
-AddChartBubble(IsTime(TimeOfBubble) && ShowPDLevelsChartBubbles && Today, "price location" = PDH, text = "PD High",GlobalColor("PDs"),yes);
-AddChartBubble(IsTime(TimeOfBubble) && ShowPDLevelsChartBubbles && Today, "price location" = PDL, text = "PD Low",GlobalColor("PDs"),no);
+AddChartBubble(IsTime(TimeOfBubble) && ShowPrevDayHighLow && ShowPDLevelsChartBubbles && Today, "price location" = PDH, text = "PD High",GlobalColor("PDs"),yes);
+AddChartBubble(IsTime(TimeOfBubble) && ShowPrevDayHighLow && ShowPDLevelsChartBubbles && Today, "price location" = PDL, text = "PD Low",GlobalColor("PDs"),no);
 
 ##### T+2 Levels #####
 def T2H = if !Day then Double.NaN else high (period = "day")[2];
 def T2L = if !Day then Double.NaN else low (period = "day")[2];
 
-plot T2PDCH = if ShowPrevDayHighLow && CTDay && PlotTimePDHL && Today then T2H else Double.NaN;
-plot T2PDCL = if ShowPrevDayHighLow && CTDay && PlotTimePDHL && Today then T2L else Double.NaN;
+plot T2PDCH = if ShowT2HighLow && CTDay && PlotTimePDHL && Today then T2H else Double.NaN;
+plot T2PDCL = if ShowT2HighLow && CTDay && PlotTimePDHL && Today then T2L else Double.NaN;
 
 T2PDCH.SetDefaultColor(CreateColor(143, 239, 191));
 T2PDCH.SetPaintingStrategy(PaintingStrategy.LINE);
@@ -148,6 +149,6 @@ T2PDCL.SetDefaultColor(CreateColor(143, 239, 191));
 T2PDCL.SetPaintingStrategy(PaintingStrategy.LINE);
 T2PDCL.SetLineWeight(3);
 
-AddChartBubble(IsTime(TimeOfBubble) && ShowT2LevelsChartBubbles && Today, "price location" = T2PDCH, text = "T+2 High",GlobalColor("PDs"),yes);
-AddChartBubble(IsTime(TimeOfBubble) && ShowT2LevelsChartBubbles && Today, "price location" = T2PDCL, text = "T+2 Low",GlobalColor("PDs"),no);
+AddChartBubble(IsTime(TimeOfBubble) && ShowT2HighLow && ShowT2LevelsChartBubbles && Today, "price location" = T2PDCH, text = "T+2 High",GlobalColor("PDs"),yes);
+AddChartBubble(IsTime(TimeOfBubble) && ShowT2HighLow && ShowT2LevelsChartBubbles && Today, "price location" = T2PDCL, text = "T+2 Low",GlobalColor("PDs"),no);
  
