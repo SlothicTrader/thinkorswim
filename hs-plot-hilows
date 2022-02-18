@@ -11,10 +11,13 @@ input PlotOverNightExtremes = yes;
 input ExtendOverNightHighLowTo = 1600;
 input ShowPrevDayHighLow = yes;
 input ExtendPreviousDayHighLowTo = 1600;
-input ShowPreviousDayLevelsChartBubbles = yes;
-input TimeOfBubble = 1600;
+input ShowPDLevelsChartBubbles = no;
+input ShowT2LevelsChartBubbles = no;
+input TimeOfBubble = 0730;
+input ShowPreviousDayClose = no;
 
-DefineGlobalColor("Time1", GetColor(1));
+DefineGlobalColor("Time1", (CreateColor(143, 239, 191)));
+DefineGlobalColor("PDs", (CreateColor(143, 239, 191)));
 
 
 def o = open;
@@ -103,7 +106,7 @@ ONL.SetDefaultColor(CreateColor(77, 166, 255));
 ONL.HideBubble();
 ONL.HideTitle(); 
 
-# >>> Previous Day High/Low Plot <<<
+# >>> Previous Day High/Low Plot snf T+2 H/L <<<
 
 def Day = GetDay();
 def LDay = GetLastDay();
@@ -115,15 +118,36 @@ def PlotTimePDHL = SecondsFromTime(0100) >= 0 and SecondsTillTime(ExtendPrevious
 
 plot PDCH = if ShowPrevDayHighLow && CTDay && PlotTimePDHL && Today then PDH else Double.NaN;
 plot PDCL = if ShowPrevDayHighLow && CTDay && PlotTimePDHL && Today then PDL else Double.NaN;
-plot PDCLS = if ShowPrevDayHighLow && CTDay && PlotTimePDHL && Today then PDC else Double.NaN;
+plot PDCLS = if ShowPreviousDayClose && ShowPrevDayHighLow && CTDay && PlotTimePDHL && Today then PDC else Double.NaN;
 
-PDCH.SetDefaultColor(Color.DARK_ORANGE);
-PDCH.SetPaintingStrategy(PaintingStrategy.POINTS);
-PDCL.SetDefaultColor(Color.DARK_ORANGE);
-PDCL.SetPaintingStrategy(PaintingStrategy.POINTS);
-PDCLS.SetDefaultColor(Color.DOWNTICK);
-PDCLS.SetStyle(Curve.FIRM);
+PDCH.SetDefaultColor(CreateColor(143, 239, 191));
+PDCH.SetLineWeight(1);
+PDCH.SetPaintingStrategy(PaintingStrategy.LINE);
+PDCL.SetDefaultColor(CreateColor(143, 239, 191));
+PDCL.SetLineWeight(1);
+PDCL.SetPaintingStrategy(PaintingStrategy.LINE);
+PDCLS.SetDefaultColor(GetColor(9));
+PDCLS.SetPaintingStrategy(PaintingStrategy.LINE);
+PDCLS.SetStyle(Curve.MEDIUM_DASH);
+PDCLS.SetLineWeight(2);
 
-AddChartBubble(IsTime(TimeOfBubble) && ShowPreviousDayLevelsChartBubbles && Today, "price location" = PDH, text = "Previous Day High",GlobalColor("Time1"),yes);
-AddChartBubble(IsTime(TimeOfBubble) && ShowPreviousDayLevelsChartBubbles && Today, "price location" = PDL, text = "Previous Day Low",GlobalColor("Time1"),no);
+AddChartBubble(IsTime(TimeOfBubble) && ShowPDLevelsChartBubbles && Today, "price location" = PDH, text = "PD High",GlobalColor("PDs"),yes);
+AddChartBubble(IsTime(TimeOfBubble) && ShowPDLevelsChartBubbles && Today, "price location" = PDL, text = "PD Low",GlobalColor("PDs"),no);
+
+##### T+2 Levels #####
+def T2H = if !Day then Double.NaN else high (period = "day")[2];
+def T2L = if !Day then Double.NaN else low (period = "day")[2];
+
+plot T2PDCH = if ShowPrevDayHighLow && CTDay && PlotTimePDHL && Today then T2H else Double.NaN;
+plot T2PDCL = if ShowPrevDayHighLow && CTDay && PlotTimePDHL && Today then T2L else Double.NaN;
+
+T2PDCH.SetDefaultColor(CreateColor(143, 239, 191));
+T2PDCH.SetPaintingStrategy(PaintingStrategy.LINE);
+T2PDCH.SetLineWeight(3);
+T2PDCL.SetDefaultColor(CreateColor(143, 239, 191));
+T2PDCL.SetPaintingStrategy(PaintingStrategy.LINE);
+T2PDCL.SetLineWeight(3);
+
+AddChartBubble(IsTime(TimeOfBubble) && ShowT2LevelsChartBubbles && Today, "price location" = T2PDCH, text = "T+2 High",GlobalColor("PDs"),yes);
+AddChartBubble(IsTime(TimeOfBubble) && ShowT2LevelsChartBubbles && Today, "price location" = T2PDCL, text = "T+2 Low",GlobalColor("PDs"),no);
  
