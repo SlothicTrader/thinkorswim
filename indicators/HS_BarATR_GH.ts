@@ -1,5 +1,6 @@
-#Study name HS_BarATR_GH
-#by hummingSloth https://github.com/hummingSloth/thinkorswim
+# Study name HS_BarATR_GH
+# by hummingSloth https://github.com/hummingSloth/thinkorswim
+# version 1.0
 
 input ATRLength = 14;
 def ATR = Round(Average(TrueRange(high,  close,  low),  ATRLength), 2);
