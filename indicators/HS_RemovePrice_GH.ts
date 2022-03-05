@@ -1,4 +1,4 @@
-# Study name HS_HiLows_GH
+# Study name HS_RemovePrice_GH
 # by hummingSloth https://github.com/hummingSloth/thinkorswim
 # version 1.0
 
