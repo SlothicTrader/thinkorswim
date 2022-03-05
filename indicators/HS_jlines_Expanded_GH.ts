@@ -1,4 +1,4 @@
-# Study name HS_jlines_expanded
+# Study name HS_jlines_expanded_GH
 # by hummingSloth with credit to BMONT https://github.com/hummingSloth/thinkorswim
 # version 1.0
 
@@ -10,11 +10,11 @@ input showFiveFifteenEMALines = no;
 input Show9EMA = yes;
 input ShowCustomJLines = no;
 input CustomJLines = AggregationPeriod.Hour;
-input Show1MinJlines = yes;
+input Show1MinJlines = no;
 input Show1MinJlinesCloud = yes;
-input Show3MinJlines = yes;
+input Show3MinJlines = no;
 input Show3MinJlinesCloud = yes;
-input Show5MinJlines = yes;
+input Show5MinJlines = no;
 input Show5MinJlinesCloud = yes;
 input Show1Min200EMA = no;
 input Show5min200EMA = yes;
