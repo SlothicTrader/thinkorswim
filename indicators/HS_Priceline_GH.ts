@@ -1,4 +1,4 @@
-# Study name HS_HiLows_GH
+# Study name HS_Priceline_GH
 # by hummingSloth https://github.com/hummingSloth/thinkorswim
 # version 1.0
 
