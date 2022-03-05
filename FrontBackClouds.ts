@@ -1,7 +1,9 @@
+# Study Name HS_FrontBackCloud
+
 declare upper;
 
-input ShowBullishFiveFifteenCloud = no;
-input ShowBearishFiveFifteenCloud = no;
+input ShowBullishFiveFifteenCloud = yes;
+input ShowBearishFiveFifteenCloud = yes;
 input showFiveFifteenEMALines = no;
 
 def Period5min = AggregationPeriod.FIVE_MIN;
