@@ -1,4 +1,6 @@
 # Study Name HS_FrontBackCloud
+# by hummingSloth https://github.com/hummingSloth/thinkorswim
+# version 1.0
 
 declare upper;
 
