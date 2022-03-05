@@ -1,4 +1,4 @@
-# Study Name HS_FrontBackCloud
+# Study Name HS_FrontBackCloud_GH
 
 declare upper;
 
